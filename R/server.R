@@ -7,7 +7,6 @@
 #    http://shiny.rstudio.com/
 #
 
-
 library(shiny)
 library(dplyr)
 library(circlize)
@@ -16,8 +15,10 @@ library(grid)
 # BiocManager::install("InteractiveComplexHeatmap", force=T)
 library(InteractiveComplexHeatmap)
 library(shinyjs)
+library(visNetwork)
 
 source("func.R")
+
 
 options(shiny.maxRequestSize=30*1024^2)
 # Define server logic required to draw a histogram
@@ -333,7 +334,7 @@ function(input, output, session) {
 
  # Output mapper
 
-  output$plot_mapper <- renderPlot({
+  output$plot_mapper <- renderVisNetwork({
     plot_mapper(mapper_object)
   })
 
@@ -393,16 +394,25 @@ function(input, output, session) {
         showNotification("\nThe mapper process from DGSA data and gene selection is finished\n")
       }
       else{
+        mapper_object <<- mapper_app(geneSelection_object[["genes_disease_component"]],
+                                     geneSelection_object[["filter_values"]],
+                                     input$num_intervals,
+                                     input$percent_overlap,
+                                     input$distance_type,
+                                     input$clustering_type,
+                                     input$num_bins_when_clustering,
+                                     input$linkage_type,
+                                     input$optimal_clustering_mode,
+                                     input$select_yes_no3)
 
         showNotification("\nThe mapper process from files uploaded is finished\n")
-
       }
 
 
       # Output panel
       output$mapper_tb <- renderUI({
         tabsetPanel(
-          tabPanel("plot_mapper", plotOutput("plot_mapper")),
+          tabPanel("plot_mapper", visNetworkOutput("plot_mapper")),
           tabPanel("interval_data", tableOutput("interval_data")),
           tabPanel("sample_in_level", tableOutput("sample_in_level")),
           tabPanel("clustering_all_levels", tableOutput("clustering_all_levels"))
