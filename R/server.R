@@ -229,6 +229,21 @@ function(input, output, session) {
     as.table(geneSelection_object[["filter_values"]])
   })
 
+  output$gene <- renderUI({
+    # add validate here
+    if(input$select_dgsa == "no"){
+      shinyjs::hide("gen_select_type2")
+      shinyjs::hide("percent_gen_select2")
+    }
+    else
+    {
+      fluidRow(
+        selectInput("gen_select_type2", "Select gene type", c("Abs", "Top_Bot")),
+        numericInput("percent_gen_select2", "Introduce percent of gene to be selected", value = 10, min=10, max=100)
+      )
+    }
+  })
+
   geneSelection_button <- observeEvent(input$geneSelection_button, {
     if(is.null(input$file)){
       validate(
