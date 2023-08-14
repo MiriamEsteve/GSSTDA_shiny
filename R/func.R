@@ -1,5 +1,8 @@
 library(GSSTDA)
 library(dplyr)
+library(shiny)
+library(shinyalert)
+
 source("One_D_Mapper_app.R")
 
 # Function to read files uploaded
@@ -61,7 +64,9 @@ check_full_data_app <- function(full_data, col_row_check,  na.rm = TRUE){
     # Remove rows (genes) with NA's values
     full_data <- full_data[rowSums(is.na(full_data))==0,]
 
-    message(paste(nrow(full_data) - nrow_ini, " missing values and NaN's are omitted in the genes (rows)"))
+    # Show a simple modal
+    msg <- paste(nrow(full_data) - nrow_ini, " missing values and NaN's are omitted in the genes (rows)")
+    showNotification(msg, duration = NULL)
   }
   return(full_data)
 }
@@ -72,17 +77,20 @@ check_vectors_app <- function(full_data, survival_time, survival_event, case_tag
 
   # Check if the arguments are vectors; a valid type of data; and the vectors are the same dimension as a full_data
   if(!is.vector(survival_time) | !is.numeric(survival_time) | length(survival_time) != ncol_full_data){
-    print("survival_time must be a valid values vector and its length must be the same as the number of patients (columns) of the full_data.")
+    msg <- "survival_time must be a valid values vector and its length must be the same as the number of patients (columns) of the full_data."
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   # Omit NAN's values in checking
   if(!is.vector(survival_event) | !(length(unique(stats::na.omit(survival_event))) == 2 & is.numeric(stats::na.omit(survival_event))) | length(survival_event) != ncol_full_data){
-    print("survival_event must be a valid values vector. Only two type of event (0 or 1). Also, its length must be the same as the number of patients (columns) of the full_data.")
+    msg <- "survival_event must be a valid values vector. Only two type of event (0 or 1). Also, its length must be the same as the number of patients (columns) of the full_data."
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   #If exits NAN's values remove it and check if it contain only two cases and it has the same dimension (columns) as full_data
   if(!is.vector(case_tag)){
-    print("case_tag must be a valid values vector.")
+    msg <- "case_tag must be a valid values vector."
+    shinyalert::shinyalert(title = msg, type = "error")
   }
   if( any(is.na(case_tag))){
     without_nan_patient <- which(!is.na(case_tag))
@@ -91,16 +99,21 @@ check_vectors_app <- function(full_data, survival_time, survival_event, case_tag
     survival_event <- survival_event[without_nan_patient]
     survival_time <- survival_time[without_nan_patient]
     ncol_full_data <- ncol(full_data)
-    message("NAN's values in patient was removed in case_tag, full_data, survival_time and survival_event")
+    msg <- "NAN's values in patient was removed in case_tag, full_data, survival_time and survival_event"
+    showNotification(msg, duration = NULL)
+
   }
 
   if(length(unique(case_tag)) != 2){
-    print("case_tag must has only two type of tags.")
+    msg <- "case_tag must has only two type of tags."
+    shinyalert::shinyalert(title = msg, type = "error")
+
   }
 
   if(length(case_tag) != ncol_full_data){
-    print("The length of case_tag must be the same as the number of patients (columns) of the full_data.")
-  }
+    msg <- "The length of case_tag must be the same as the number of patients (columns) of the full_data."
+    shinyalert::shinyalert(title = msg, type = "error")
+}
 
 
   return(list(full_data, survival_event, survival_time, case_tag))
@@ -113,7 +126,8 @@ check_gene_selection_app <- function(num_genes, gen_select_type, percent_gen_sel
   #Check gen_select_type
   gen <- c("top_bot","abs")
   if(!gen_select_type %in% gen){
-    stop(paste("Invalid gene selection type selected. Choose one of the folowing: ", paste(gen, collapse = ", ")))
+    msg <- paste("Invalid gene selection type selected. Choose one of the folowing: ", paste(gen, collapse = ", "))
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   #Number of genes to be selected in gene_selection_surv function
@@ -126,12 +140,14 @@ check_gene_selection_app <- function(num_genes, gen_select_type, percent_gen_sel
 check_filter_values_app <- function(full_data, filter_values, na.rm = TRUE){
   # Check if filter_values is a vector
   if(!is.vector(filter_values)){
-    stop("filter_values must be a valid values vector")
+    msg <- "filter_values must be a valid values vector"
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   #Check if the names of the filter_values are the same as the cols of full_data.
   if(!setequal(names(filter_values), colnames(full_data))){
-    stop("The name of the filter_values must be the same as the patient name of the full_data (or genes_disease_component).")
+    msg <- "The name of the filter_values must be the same as the patient name of the full_data (or genes_disease_component)."
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   #Omit NAN's values
@@ -150,13 +166,15 @@ check_arg_mapper_app <- function(full_data, filter_values, distance_type, cluste
   #Check distance_type
   distances <- c("cor","euclidean")
   if(!distance_type %in% distances){
-    stop(paste("Invalid distance selected. Choose one of the folowing: ", paste(distances, collapse = ", ")))
+    msg <- paste("Invalid distance selected. Choose one of the folowing: ", paste(distances, collapse = ", "))
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   #Check clustering_type
   clust_types <- c("hierarchical","PAM")
   if(!clustering_type %in% clust_types){
-    stop(paste("Invalid clustering method selected. Choose one of the folowing: ", paste(clust_types,collapse = ", ")))
+    msg <- paste("Invalid clustering method selected. Choose one of the folowing: ", paste(clust_types,collapse = ", "))
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   optimal_clustering_mode <- "silhouette"
@@ -168,12 +186,14 @@ check_arg_mapper_app <- function(full_data, filter_values, distance_type, cluste
     }
   }
 
-  message("The optimal clustering mode is '", optimal_clustering_mode, "' by default")
+  msg <- paste("The optimal clustering mode is '", optimal_clustering_mode, "' by default")
+  showNotification(msg, duration = NULL)
 
   #Check linkage_type
   link_types <- c("single","average","complete")
   if(!linkage_type %in% link_types){
-    stop(paste("Invalid linkage method selected. Choose one of the folowing: ", paste(link_types,collapse = ", ")))
+    msg <- paste("Invalid linkage method selected. Choose one of the folowing: ", paste(link_types,collapse = ", "))
+    shinyalert::shinyalert(title = msg, type = "error")
   }
 
   # Check if filter_values == [] the filter_values is not calculated yet. So, we checked only the others args
