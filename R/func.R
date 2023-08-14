@@ -66,7 +66,7 @@ check_full_data_app <- function(full_data, col_row_check,  na.rm = TRUE){
 
     # Show a simple modal
     msg <- paste(nrow(full_data) - nrow_ini, " missing values and NaN's are omitted in the genes (rows)")
-    showNotification(msg, duration = NULL)
+    showNotification(msg, duration = 10)
   }
   return(full_data)
 }
@@ -100,7 +100,7 @@ check_vectors_app <- function(full_data, survival_time, survival_event, case_tag
     survival_time <- survival_time[without_nan_patient]
     ncol_full_data <- ncol(full_data)
     msg <- "NAN's values in patient was removed in case_tag, full_data, survival_time and survival_event"
-    showNotification(msg, duration = NULL)
+    showNotification(msg, duration = 10)
 
   }
 
@@ -187,7 +187,7 @@ check_arg_mapper_app <- function(full_data, filter_values, distance_type, cluste
   }
 
   msg <- paste("The optimal clustering mode is '", optimal_clustering_mode, "' by default")
-  showNotification(msg, duration = NULL)
+  showNotification(msg, duration = 10)
 
   #Check linkage_type
   link_types <- c("single","average","complete")
