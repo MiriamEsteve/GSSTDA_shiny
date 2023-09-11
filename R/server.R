@@ -261,11 +261,12 @@ function(input, output, session) {
 
         # Create a Progress object
         progress <- shiny::Progress$new()
+
         # Close the progress when this reactive exits (even if there's an error)
         on.exit(progress$close())
         progress$set(message = "\nCalculating the matrix of Zcox from DGSA data.", value = 0)
 
-        geneSelection_object <<- geneSelection_app(progress, DGSA_object, input$gen_select_type, input$percent_gen_select, input$select_yes_no2, input$select_control_tag2)
+        geneSelection_object <<- geneSelection_app(progress, DGSA_object, input$gen_select_type2, input$percent_gen_select2, input$select_yes_no2, input$select_control_tag2)
 
         output$geneSelection_text <- renderPrint({cat("\nThe gene selection process from DGSA data is finished\n")})
         showNotification("\nThe gene selection process from DGSA data is finished\n")
@@ -280,13 +281,14 @@ function(input, output, session) {
 
 
         #Select gene from data object
-        geneSelection_object <<- geneSelection_app(progress, data, input$gen_select_type, input$percent_gen_select, input$select_yes_no2, input$select_control_tag2)
+        geneSelection_object <<- geneSelection_app(progress, data, input$gen_select_type2, input$percent_gen_select2, input$select_yes_no2, input$select_control_tag2)
 
         output$geneSelection_text <- renderPrint({cat("\nThe gene selection process from files uploaded is finished\n")})
         showNotification("\nThe gene selection process from files uploaded is finished\n")
 
       }
 
+      print("hola")
       # Output panel
       output$geneSelection_tb <- renderUI({
         tabsetPanel(
