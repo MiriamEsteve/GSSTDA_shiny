@@ -288,14 +288,13 @@ function(input, output, session) {
 
       }
 
-      print("hola")
       # Output panel
       output$geneSelection_tb <- renderUI({
         tabsetPanel(
           tabPanel("cox_all_matrix", tableOutput("cox_matrix")),
-          tabPanel("genes_selected", tableOutput("gene_select")),
-          tabPanel("genes_disease_component", tableOutput("genes_disease")),
-          tabPanel("filter_values", tableOutput("filter"))
+          tabPanel("genes_selected", tableOutput("gene_select"))
+          #tabPanel("genes_disease_component", tableOutput("genes_disease")),
+          #tabPanel("filter_values", tableOutput("filter"))
         )
       })
 
@@ -355,18 +354,18 @@ function(input, output, session) {
     plot_mapper(mapper_object)
   })
 
-  output$interval_data <- renderTable({
-    as.table(mapper_object[["interval_data"]])
-  })
-  output$sample_in_level <- renderTable({
-    as.table(mapper_object[["sample_in_level"]])
-  })
-  output$interval_data <- renderTable({
-    as.table(mapper_object[["interval_data"]])
-  })
-  output$clustering_all_levels <- renderTable({
-    as.table(mapper_object[["clustering_all_levels"]])
-  })
+  #output$interval_data <- renderPrint({
+  #  print(mapper_object[["interval_data"]])
+  #})
+  #output$sample_in_level <- renderPrint({
+  #  print(mapper_object[["sample_in_level"]])
+  #})
+  #output$interval_data <- renderPrint({
+  #  print(mapper_object[["interval_data"]])
+  #})
+  #output$clustering_all_levels <- renderPrint({
+  #  print(mapper_object[["clustering_all_levels"]])
+  #})
 
   mapper_button <- observeEvent(input$mapper_button, {
     if(is.null(input$file)){
@@ -425,16 +424,13 @@ function(input, output, session) {
         showNotification("\nThe mapper process from files uploaded is finished\n")
       }
 
-
       # Output panel
       output$mapper_tb <- renderUI({
         tabsetPanel(
-          tabPanel("plot_mapper", visNetworkOutput("plot_mapper")),
-          tabPanel("interval_data", tableOutput("interval_data")),
-          tabPanel("sample_in_level", tableOutput("sample_in_level")),
-          tabPanel("clustering_all_levels", tableOutput("clustering_all_levels"))
-
-
+          tabPanel("plot_mapper", visNetworkOutput("plot_mapper"))
+          #tabPanel("interval_data", textOutput("interval_data")),
+          #tabPanel("sample_in_level",textOutput("sample_in_level")),
+          #tabPanel("clustering_all_levels", textOutput("clustering_all_levels"))
         )
       })
 
