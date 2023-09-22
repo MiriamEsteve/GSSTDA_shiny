@@ -16,6 +16,8 @@ library(grid)
 library(InteractiveComplexHeatmap)
 library(shinyjs)
 library(visNetwork)
+library(glue)
+library(tidyverse)
 
 source("func.R")
 
@@ -360,9 +362,6 @@ function(input, output, session) {
   #output$sample_in_level <- renderPrint({
   #  print(mapper_object[["sample_in_level"]])
   #})
-  #output$interval_data <- renderPrint({
-  #  print(mapper_object[["interval_data"]])
-  #})
   #output$clustering_all_levels <- renderPrint({
   #  print(mapper_object[["clustering_all_levels"]])
   #})
@@ -436,6 +435,39 @@ function(input, output, session) {
 
     }
 
+    #datasets stored in reactiveValues list
+    #to_download <- reactiveValues(dataset1 = mapper_object[["interval_data"]], dataset2 = mapper_object[["sample_in_level"]], dataset3 = mapper_object[["clustering_all_levels"]], dataset4 = NULL)
+    #print(to_download)
+    #output$download_btn <- downloadHandler(
+    #  filename = function(){
+    #    paste("my_data_", Sys.Date(), ".zip", sep = "")
+    #  },
+    #  content = function(file){
+
+    #    temp_directory <- file.path(tempdir(), as.integer(Sys.time()))
+    #    dir.create(temp_directory)
+
+    #    reactiveValuesToList(to_download) %>%
+    #      imap(function(x,y){
+    #        if(!is.null(x)){
+    #          file_name <- glue("{y}_data.csv")
+    #          readr::write_csv(x, file.path(temp_directory, file_name))
+    #        }
+    #      })
+
+
+    #    zip::zip(
+    #      zipfile = file,
+    #      files = dir(temp_directory),
+    #      root = temp_directory
+    #    )
+
+
+
+    #  },
+    #  contentType = "application/zip"
+
+    #)
   })
 
 

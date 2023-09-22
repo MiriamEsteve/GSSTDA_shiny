@@ -82,7 +82,14 @@ ui <- fluidPage(theme = shinytheme("journal"),
                              )),
                              fluidRow(actionButton("mapper_button", "Update Data Model")),
                              fluidRow(textOutput("mapper_text")),
+                             #br(),
+                             #downloadButton(
+                             #   outputId = "download_btn",
+                             #   label = "Download",
+                             #   icon = icon("file-download")
+                             #),
                              uiOutput("mapper_tb")
+
                     )
                   )
                 )

@@ -1,0 +1,12 @@
+name: gsstda
+title: gsstda
+username: gsstda
+account: gsstda
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 9954162
+bundleId:
+url: https://gsstda.shinyapps.io/gsstda/
+version: 1
+asMultiple: FALSE
+asStatic: FALSE
